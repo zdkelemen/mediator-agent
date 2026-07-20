@@ -1,0 +1,37 @@
+# Mediator agent configuration
+# The weight of each criterion is set by YOUR organization — that is what makes the decision auditable.
+
+model: claude-sonnet-4-6
+max_tokens: 1500
+
+# Decision criteria in decreasing order of importance (weight: 1-100)
+criteria:
+  - name: "Business impact"
+    weight: 40
+    description: "Revenue, customer commitment, market timing. A missed OEM deadline can cost more than a quarter of tech debt."
+  - name: "A-SPICE / compliance"
+    weight: 25
+    description: "If the proposed solution violates an A-SPICE, ISO 26262 or audit requirement, that is a blocker, not negotiable."
+  - name: "Delivery risk"
+    weight: 20
+    description: "How likely is it that the committed scope won't be done by the committed deadline? A disputed effort estimate = high risk."
+  - name: "Tech debt / architecture health"
+    weight: 15
+    description: "How much does the short-term fix increase the cost of future development? Compound-interest principle."
+
+# Roles mapped to platform user IDs (this is how the bot knows who is PM and who is architect).
+# Slack user ID: profile → "Copy member ID" (e.g. U01ABCDEF).
+# Teams: the Azure AD object id / member id of the user (from the activity's from.aadObjectId).
+participants:
+  U0000000001:
+    name: "Kata"
+    role: "Product Manager"
+  U0000000002:
+    name: "Gabor"
+    role: "Architect"
+
+# Default role for an unknown user
+default_role: "Participant"
+
+# After how many messages the mediator warns that a party has gone silent
+silence_warning_after: 6

@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mediator-agent"
+version = "0.2.0"
+description = "Impartial AI mediator for product-manager vs. architect disputes — CLI, Slack, Microsoft Teams, and MCP (any agentic CLI)."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=0.40.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+slack = ["slack-bolt>=1.20.0"]
+teams = [
+    "aiohttp>=3.9",
+    "botbuilder-core>=4.15.0",
+    "botbuilder-integration-aiohttp>=4.15.0",
+]
+mcp = ["mcp>=1.2.0"]
+all = [
+    "slack-bolt>=1.20.0",
+    "aiohttp>=3.9",
+    "botbuilder-core>=4.15.0",
+    "botbuilder-integration-aiohttp>=4.15.0",
+    "mcp>=1.2.0",
+]
+
+[project.scripts]
+mediator-cli = "mediator.cli:main"
+mediator-slack = "mediator.adapters.slack_app:main"
+mediator-teams = "mediator.adapters.teams_app:main"
+mediator-mcp = "mediator.mcp_server:main"
+
+[tool.setuptools.packages.find]
+include = ["mediator*"]

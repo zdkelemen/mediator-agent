@@ -1,0 +1,15 @@
+# Base dependencies (CLI + engine). Platform adapters are optional extras —
+# install what you need, or use `pip install -e .[all]` via pyproject.toml.
+anthropic>=0.40.0
+PyYAML>=6.0
+
+# --- Slack adapter (pip install -e .[slack]) ---
+# slack-bolt>=1.20.0
+
+# --- Microsoft Teams adapter (pip install -e .[teams]) ---
+# aiohttp>=3.9
+# botbuilder-core>=4.15.0
+# botbuilder-integration-aiohttp>=4.15.0
+
+# --- MCP server for agentic CLIs (pip install -e .[mcp]) ---
+# mcp>=1.2.0
