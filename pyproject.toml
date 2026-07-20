@@ -7,7 +7,13 @@ name = "mediator-agent"
 version = "0.2.0"
 description = "Impartial AI mediator for product-manager vs. architect disputes — CLI, Slack, Microsoft Teams, and MCP (any agentic CLI)."
 readme = "README.md"
+license = { text = "MIT" }
 requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+]
 dependencies = [
     "anthropic>=0.40.0",
     "PyYAML>=6.0",
