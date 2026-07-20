@@ -24,6 +24,7 @@ dependencies = [
 
 [project.optional-dependencies]
 openai = ["openai>=1.40.0"]
+ollama = ["openai>=1.40.0"]  # Ollama speaks the OpenAI API — same client
 slack = ["slack-bolt>=1.20.0"]
 webhook = ["aiohttp>=3.9"]
 teams = [

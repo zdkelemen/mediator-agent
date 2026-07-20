@@ -39,6 +39,9 @@ pip install -e ".[all]"     # everything
 Copy `.env.example` to `.env` and fill in the keys you need. On PowerShell:
 `Copy-Item .env.example .env`. On bash: `cp .env.example .env`.
 
+> **In a hurry?** See the [Quick Start guide](QUICKSTART.md) — the fastest path to a
+> running mediation on each surface, including a fully offline local-model setup.
+
 ## Choosing an LLM provider (vendor-independent)
 
 The mediator's reasoning is decoupled from any single vendor. Pick a backend in
@@ -48,16 +51,19 @@ The mediator's reasoning is decoupled from any single vendor. Pick a backend in
 |---|---|---|---|
 | `anthropic` | default | `ANTHROPIC_API_KEY` | Claude via the Anthropic SDK |
 | `openai` | `provider: openai` | `OPENAI_API_KEY` | OpenAI **or** any OpenAI-compatible API |
+| `ollama` | `provider: ollama` | Ollama running locally | Local models, **no cloud, no key** |
 
-For a self-hosted or third-party OpenAI-compatible endpoint (Azure OpenAI, Ollama,
-LM Studio, OpenRouter, vLLM, Together, …), set `OPENAI_BASE_URL`, e.g. Ollama:
+**Local models with Ollama (fully offline):**
 
 ```bash
-export MEDIATOR_PROVIDER=openai
-export OPENAI_API_KEY=ollama            # any non-empty value for local servers
-export OPENAI_BASE_URL=http://localhost:11434/v1
-# and set the model in config.yaml, e.g.  model: llama3.1
+ollama pull llama3.1                     # once
+export MEDIATOR_PROVIDER=ollama          # PowerShell: $env:MEDIATOR_PROVIDER="ollama"
+# set  model: llama3.1  in config.yaml, then run any surface (CLI, webhook, MCP…)
 ```
+
+Ollama defaults to `http://localhost:11434/v1`; override with `OLLAMA_BASE_URL`.
+For **Azure OpenAI / LM Studio / OpenRouter / vLLM**, use `provider: openai` with
+`OPENAI_BASE_URL` set to that endpoint.
 
 ## 1. Try it on the CLI (~2 min)
 

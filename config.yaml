@@ -4,19 +4,27 @@
 # LLM provider — the mediator is vendor-independent. Override with MEDIATOR_PROVIDER.
 #   anthropic → Claude via the Anthropic SDK        (needs ANTHROPIC_API_KEY)
 #   openai    → OpenAI OR any OpenAI-compatible API  (needs OPENAI_API_KEY; set
-#               OPENAI_BASE_URL for Azure OpenAI / Ollama / LM Studio / OpenRouter …)
+#               OPENAI_BASE_URL for Azure OpenAI / LM Studio / OpenRouter / vLLM …)
+#   ollama    → local models via Ollama, no cloud, no key (needs Ollama running)
 provider: anthropic
 
 # Model for the active provider. If omitted, a sensible per-provider default is used
-# (anthropic → claude-opus-4-8, openai → gpt-4o).
+# (anthropic → claude-opus-4-8, openai → gpt-4o, ollama → llama3.1).
 model: claude-opus-4-8
 max_tokens: 1500
+
+# --- Local models with Ollama (fully offline) ---
+# 1) install Ollama, then:  ollama pull llama3.1
+# 2) set provider: ollama  (or MEDIATOR_PROVIDER=ollama) and model: llama3.1
+# The endpoint defaults to http://localhost:11434/v1 (override with OLLAMA_BASE_URL).
 
 # Optional per-provider options (e.g. a custom OpenAI-compatible endpoint):
 # providers:
 #   openai:
-#     model: llama3.1
-#     base_url: http://localhost:11434/v1   # Ollama example
+#     model: gpt-4o
+#     base_url: https://your-azure-openai.openai.azure.com/...
+#   ollama:
+#     model: mistral
 
 # Decision criteria in decreasing order of importance (weight: 1-100)
 criteria:

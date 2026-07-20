@@ -22,7 +22,11 @@ from typing import Protocol
 _DEFAULT_MODELS = {
     "anthropic": "claude-opus-4-8",
     "openai": "gpt-4o",
+    "ollama": "llama3.1",
 }
+
+# Default endpoint for a local Ollama server (OpenAI-compatible API).
+_OLLAMA_DEFAULT_URL = "http://localhost:11434/v1"
 
 
 class LLMProvider(Protocol):
@@ -67,7 +71,13 @@ class OpenAIProvider:
 
         opts = options or {}
         base_url = opts.get("base_url") or os.environ.get("OPENAI_BASE_URL")
-        self._client = OpenAI(base_url=base_url) if base_url else OpenAI()
+        api_key = opts.get("api_key") or os.environ.get("OPENAI_API_KEY")
+        kwargs: dict = {}
+        if base_url:
+            kwargs["base_url"] = base_url
+        if api_key:
+            kwargs["api_key"] = api_key
+        self._client = OpenAI(**kwargs)
 
     def complete(self, *, system: str, messages: list[dict], model: str, max_tokens: int) -> str:
         # OpenAI carries the system prompt as the first message rather than a
@@ -81,9 +91,28 @@ class OpenAIProvider:
         return (resp.choices[0].message.content or "").strip()
 
 
+class OllamaProvider(OpenAIProvider):
+    """Local models via Ollama's OpenAI-compatible API — zero cloud, zero keys.
+
+    Defaults to a local Ollama server at ``http://localhost:11434/v1``; override
+    with ``OLLAMA_BASE_URL`` or a ``base_url`` in the provider options. Ollama
+    ignores the API key, but the OpenAI SDK requires one, so a placeholder is sent.
+    Pull a model first, e.g. ``ollama pull llama3.1``, and set ``model:`` to match.
+    """
+
+    def __init__(self, options: dict | None = None) -> None:
+        opts = dict(options or {})
+        opts.setdefault(
+            "base_url", os.environ.get("OLLAMA_BASE_URL") or _OLLAMA_DEFAULT_URL
+        )
+        opts.setdefault("api_key", "ollama")  # placeholder — Ollama doesn't check it
+        super().__init__(opts)
+
+
 _PROVIDERS = {
     "anthropic": AnthropicProvider,
     "openai": OpenAIProvider,
+    "ollama": OllamaProvider,
 }
 
 

@@ -3,7 +3,7 @@
 anthropic>=0.40.0
 PyYAML>=6.0
 
-# --- OpenAI / OpenAI-compatible provider (pip install -e .[openai]) ---
+# --- OpenAI / OpenAI-compatible provider, incl. Ollama (pip install -e .[openai]) ---
 # openai>=1.40.0
 
 # --- Generic webhook adapter (pip install -e .[webhook]) ---
