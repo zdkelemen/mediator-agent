@@ -27,7 +27,9 @@ from ..commands import handle_command, handle_participant_message
 engine = MediatorEngine(os.environ.get("MEDIATOR_CONFIG", "config.yaml"))
 store = SessionStore()
 
-app = App(token=os.environ["SLACK_BOT_TOKEN"])
+# token_verification_enabled=False keeps construction offline/network-free — the
+# token is validated lazily via auth_test() on the first event (below).
+app = App(token=os.environ["SLACK_BOT_TOKEN"], token_verification_enabled=False)
 BOT_USER_ID = None  # filled in on first event
 
 
