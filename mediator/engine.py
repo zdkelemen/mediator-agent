@@ -1,20 +1,17 @@
-"""The mediator engine: Claude API call + protocol enforcement in code."""
+"""The mediator engine: provider-agnostic LLM call + protocol enforcement in code."""
 
-import os
-
-import anthropic
 import yaml
 
 from .prompts import build_system_prompt, STEELMAN_NUDGE, FORCE_DECISION
 from .session import Session, MEDIATOR_ROLE, MEDIATOR_NAME
+from .llm import get_provider
 
 
 class MediatorEngine:
     def __init__(self, config_path: str = "config.yaml") -> None:
         with open(config_path, encoding="utf-8") as f:
             self.config = yaml.safe_load(f)
-        self.client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-        self.model = self.config.get("model", "claude-sonnet-4-6")
+        self.provider, self.model = get_provider(self.config)
         self.max_tokens = int(self.config.get("max_tokens", 1500))
 
     # --- participant resolution --------------------------------------------
@@ -49,13 +46,12 @@ class MediatorEngine:
         elif not session.decision_allowed():
             messages[-1]["content"] += f"\n\n[SYSTEM]: {STEELMAN_NUDGE}"
 
-        resp = self.client.messages.create(
-            model=self.model,
-            max_tokens=self.max_tokens,
+        text = self.provider.complete(
             system=system,
             messages=messages,
+            model=self.model,
+            max_tokens=self.max_tokens,
         )
-        text = "".join(b.text for b in resp.content if b.type == "text").strip()
 
         session.add_message(MEDIATOR_NAME, MEDIATOR_ROLE, text)
         if "**DECISION:**" in text:

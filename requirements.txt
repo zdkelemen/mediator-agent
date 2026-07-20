@@ -1,7 +1,13 @@
-# Base dependencies (CLI + engine). Platform adapters are optional extras —
-# install what you need, or use `pip install -e .[all]` via pyproject.toml.
+# Base dependencies (CLI + engine, Claude provider). Everything else is an
+# optional extra — install what you need, or use `pip install -e .[all]`.
 anthropic>=0.40.0
 PyYAML>=6.0
+
+# --- OpenAI / OpenAI-compatible provider (pip install -e .[openai]) ---
+# openai>=1.40.0
+
+# --- Generic webhook adapter (pip install -e .[webhook]) ---
+# aiohttp>=3.9
 
 # --- Slack adapter (pip install -e .[slack]) ---
 # slack-bolt>=1.20.0

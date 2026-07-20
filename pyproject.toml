@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mediator-agent"
-version = "0.2.0"
-description = "Impartial AI mediator for product-manager vs. architect disputes — CLI, Slack, Microsoft Teams, and MCP (any agentic CLI)."
+version = "0.3.0"
+description = "Impartial, vendor-independent AI mediator for product-manager vs. architect disputes — CLI, Slack, Microsoft Teams, generic webhook, and MCP (any agentic CLI)."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -14,13 +14,18 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Intended Audience :: Developers",
 ]
+# Base install ships the Claude (Anthropic) provider so it works out of the box.
+# The mediator is vendor-independent — add the `openai` extra for OpenAI or any
+# OpenAI-compatible endpoint (Azure OpenAI, Ollama, LM Studio, OpenRouter, …).
 dependencies = [
     "anthropic>=0.40.0",
     "PyYAML>=6.0",
 ]
 
 [project.optional-dependencies]
+openai = ["openai>=1.40.0"]
 slack = ["slack-bolt>=1.20.0"]
+webhook = ["aiohttp>=3.9"]
 teams = [
     "aiohttp>=3.9",
     "botbuilder-core>=4.15.0",
@@ -28,6 +33,7 @@ teams = [
 ]
 mcp = ["mcp>=1.2.0"]
 all = [
+    "openai>=1.40.0",
     "slack-bolt>=1.20.0",
     "aiohttp>=3.9",
     "botbuilder-core>=4.15.0",
@@ -39,6 +45,7 @@ all = [
 mediator-cli = "mediator.cli:main"
 mediator-slack = "mediator.adapters.slack_app:main"
 mediator-teams = "mediator.adapters.teams_app:main"
+mediator-webhook = "mediator.adapters.webhook_app:main"
 mediator-mcp = "mediator.mcp_server:main"
 
 [tool.setuptools.packages.find]

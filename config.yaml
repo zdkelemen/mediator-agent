@@ -1,8 +1,22 @@
 # Mediator agent configuration
 # The weight of each criterion is set by YOUR organization — that is what makes the decision auditable.
 
-model: claude-sonnet-4-6
+# LLM provider — the mediator is vendor-independent. Override with MEDIATOR_PROVIDER.
+#   anthropic → Claude via the Anthropic SDK        (needs ANTHROPIC_API_KEY)
+#   openai    → OpenAI OR any OpenAI-compatible API  (needs OPENAI_API_KEY; set
+#               OPENAI_BASE_URL for Azure OpenAI / Ollama / LM Studio / OpenRouter …)
+provider: anthropic
+
+# Model for the active provider. If omitted, a sensible per-provider default is used
+# (anthropic → claude-opus-4-8, openai → gpt-4o).
+model: claude-opus-4-8
 max_tokens: 1500
+
+# Optional per-provider options (e.g. a custom OpenAI-compatible endpoint):
+# providers:
+#   openai:
+#     model: llama3.1
+#     base_url: http://localhost:11434/v1   # Ollama example
 
 # Decision criteria in decreasing order of importance (weight: 1-100)
 criteria:
